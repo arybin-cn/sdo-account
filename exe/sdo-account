@@ -6,14 +6,13 @@
 
 require 'open-uri'
 require 'json'
+ON.parse open("https://reguser.sdo.com/user/existence/username/#{account}.jsonp").readlines.join[1..-2]u
+$alphabets=('a'..'z').to_a
 
-digits=(0..9).to_a
-alphabets=('a'..'z').to_a
-
-match_pattern = {
-  '*'=>digits+alphabets,
-  '!'=>digits,
-  '?'=>alphabets
+$match_pattern = {
+  '*'=>$digits+$alphabets,
+  '!'=>$digits,
+  '?'=>$alphabets
 }
 
 def query(account)
@@ -27,13 +26,13 @@ end
 
 
 def recursive_query(account)
-  match_pattern.keys.each do |key|
-    value = match_pattern[key]
-    if account.include? key
-      index = account.index key
+  $match_pattern.keys.each do |key|
+    value = $match_pattern[key]
+    if index=account.index(key)
       value.each do |sub|
-        account[index]=sub
-        recursive_query(account)
+        tmp=account.dup
+        tmp[index]=sub
+        recursive_query(tmp)
       end
       return
     end
