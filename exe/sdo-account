@@ -6,7 +6,8 @@
 
 require 'open-uri'
 require 'json'
-ON.parse open("https://reguser.sdo.com/user/existence/username/#{account}.jsonp").readlines.join[1..-2]u
+
+$digits=(0..9).to_a.map &:to_s
 $alphabets=('a'..'z').to_a
 
 $match_pattern = {
@@ -16,7 +17,7 @@ $match_pattern = {
 }
 
 def query(account)
-  JSON.parse open("https://reguser.sdo.com/user/existence/username/#{account}.jsonp").readlines.join[1..-2]
+  JSON.parse open("http://reguser.sdo.com/user/existence/username/#{account}.jsonp").readlines.join[1..-2]
 end
 
 #return ture if given account has not been registered and false else.
