@@ -41,5 +41,8 @@ def recursive_query(account)
   $stdout.puts account if available?(account)
 end
 
-
-recursive_query(ARGV.first)
+begin
+  recursive_query(ARGV.first)
+rescue
+  $stdout.puts '行为异常，当前网络可能已被暂时屏蔽！'
+end
