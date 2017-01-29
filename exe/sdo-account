@@ -1,3 +1,45 @@
 #!/usr/bin/env ruby
 
-puts 'hello'
+#* for digits or alphabets
+#! for digits 0-9
+#? for alpabets a-z (case insensitive)
+
+require 'open-uri'
+require 'json'
+
+digits=(0..9).to_a
+alphabets=('a'..'z').to_a
+
+match_pattern = {
+  '*'=>digits+alphabets,
+  '!'=>digits,
+  '?'=>alphabets
+}
+
+def query(account)
+  JSON.parse open("https://reguser.sdo.com/user/existence/username/#{account}.jsonp").readlines.join[1..-2]
+end
+
+#return ture if given account has not been registered and false else.
+def available?(account)
+  !query(account)["existing"]
+end
+
+
+def recursive_query(account)
+  match_pattern.keys.each do |key|
+    value = match_pattern[key]
+    if account.include? key
+      index = account.index key
+      value.each do |sub|
+        account[index]=sub
+        recursive_query(account)
+      end
+      return
+    end
+  end
+  $stdout.puts account if available?(account)
+end
+
+
+recursive_query(ARGV.first)
